@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rapcampo <rapcampo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/23 13:01:52 by rapcampo          #+#    #+#             */
-/*   Updated: 2024/09/23 15:17:33 by rapcampo         ###   ########.fr       */
+/*   Created: 2024/09/27 00:42:35 by rapcampo          #+#    #+#             */
+/*   Updated: 2024/09/27 01:05:51 by rapcampo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdarg.h>
 
-int	ft_print_nbr(long long n, const char *base)
+int ft_print_nbr(long long nbr, char *base)
 {
 	int printed = 0;
 	long long base_len = 0;
-	if (base[0] == '-' && n < 0)
+	if (base[0] == '-' && nbr < 0)
 	{
-		n = -n;
+		nbr = -nbr;
 		printed += write(1, "-", 1);
 		base++;
 	}
@@ -27,9 +27,9 @@ int	ft_print_nbr(long long n, const char *base)
 		base++;
 	while (base[base_len])
 		base_len++;
-	if (n >= base_len)
-		printed += ft_print_nbr(n / base_len, base);
-	printed +=  write(1, &base[n % base_len], 1);
+	if (nbr >= base_len)
+		printed += ft_print_nbr(nbr / base_len, base);
+	printed += write(1, &base[nbr % base_len], 1);
 	return (printed);
 }
 
@@ -39,11 +39,11 @@ int	ft_string(char *str)
 	if (!str)
 		return (write(1, "(null)", 6), printed += 6);
 	while (*str)
-		printed += write(1, &*str++, 1);
+		printed += write(1, str++, 1);
 	return (printed);
 }
 
-int check_print(char function, va_list ap)
+int	check_print(char function, va_list ap)
 {
 	int printed = 0;
 	if (function == 's')
@@ -57,19 +57,18 @@ int check_print(char function, va_list ap)
 	return (printed);
 }
 
-int	ft_printf(char *arg, ...)
+int	ft_printf(char *format, ...)
 {
 	va_list ap;
 	int	printed = 0;
-	int err = 0;
-	va_start(ap, arg);
-	while (*arg)
+	va_start(ap, format);
+	while(*format)
 	{
-		if (*arg == '%')
-			printed += check_print(*(++arg), ap);
+		if (*format == '%')
+			printed += check_print(*(++format), ap);
 		else
-			printed += write(1, &*arg, 1);
-		++arg;
+			printed += write(1, format, 1);
+		++format;
 	}
 	return (va_end(ap), printed);
 }
