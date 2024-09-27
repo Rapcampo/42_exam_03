@@ -1,6 +1,4 @@
-#include <stddef.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <stdlib.h>
 
 #ifndef BUFFER_SIZE
@@ -41,8 +39,8 @@ void *ft_calloc(size_t nmemb, size_t size)
 void	fill_buffer(char *str)
 {
 	char *has_nl = ft_strchr(str, '\n');
-	size_t i = 0;
-	size_t len;
+	ssize_t i = 0;
+	ssize_t len;
 	if (has_nl)
 	{
 		len = ft_strlen(has_nl + 1);
@@ -110,4 +108,20 @@ char *get_next_line(int fd)
 		return (NULL);
 	}
 	return (line);
+}
+
+#include <stdio.h>
+#include <fcntl.h>
+
+int	main(void)
+{
+	auto int	 fd = open("example.txt", O_RDONLY);
+	char	*line;
+
+	while ((line = get_next_line(fd)) != NULL)
+		printf("%s", line);
+	free(line);
+
+	close(fd);
+	return (0);
 }

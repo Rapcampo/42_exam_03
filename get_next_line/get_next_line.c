@@ -59,3 +59,16 @@ char *get_next_line(int fd)
 		return (NULL);
 	return (ft_strdup(line));
 }
+
+int	main(void)
+{
+	auto int	 fd = open("example.txt", O_RDONLY);
+	char	*line;
+
+	while ((line = get_next_line(fd)) != NULL)
+		printf("%s", line);
+	free(line);
+
+	close(fd);
+	return (0);
+}
