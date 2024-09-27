@@ -22,8 +22,9 @@
 char *ft_strdup(char *src)
 {
 	char *dest;
-	int i = -1;
-	while (src[++i]);
+	int i = 0;
+	while (src[i])
+		i++;
 	dest = malloc(sizeof(char) * (i + 1));
 	i = -1;
 	while (src[++i])
@@ -34,11 +35,11 @@ char *ft_strdup(char *src)
 
 char *get_next_line(int fd)
 {
-	static char buffer[BUFFER_SIZE];
+	static char buffer[BUFFER_SIZE + 1];
 	char line[70000];
 	static int buffer_read;
 	static int buffer_pos;
-	int	i = -1;
+	int	i = 0;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	while (1)
@@ -50,12 +51,12 @@ char *get_next_line(int fd)
 			if (buffer_read <= 0)
 				break;
 		}
-		line[++i] = buffer[buffer_pos++];
+		line[i++] = buffer[buffer_pos++];
 		if (line[i - 1] == '\n')
 			break ;
 	}
 	line [i] = '\0';
-	if (i == 0)
+	if (i <= 0)
 		return (NULL);
 	return (ft_strdup(line));
 }
@@ -66,7 +67,11 @@ int	main(void)
 	char	*line;
 
 	while ((line = get_next_line(fd)) != NULL)
+	{
 		printf("%s", line);
+		free(line);
+		line = NULL;
+	}
 	free(line);
 
 	close(fd);

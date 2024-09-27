@@ -119,7 +119,11 @@ int	main(void)
 	char	*line;
 
 	while ((line = get_next_line(fd)) != NULL)
+	{
 		printf("%s", line);
+		free(line);
+		line = NULL;
+	}
 	free(line);
 
 	close(fd);
